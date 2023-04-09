@@ -1,0 +1,45 @@
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt=require("bcrypt")
+
+
+const doctorSchema = new mongoose.Schema(
+  {
+    Name: {
+      type: String,
+      required: [true, "Please enter your name"],
+    },
+    Email: {
+      type: String,
+      required: [true, "Please enter your email"],
+      unique: true,
+      lowercase: true,
+      uppercase:true,
+      validate: [validator.isEmail, "Please enter your email..."],
+    },
+    DoctorId: {
+      type: String,
+      required: [true, "Doctor has a ID"],
+    },
+    Role: {
+      type: String,
+      enum: ["doctor"],
+      default: "doctor",
+    },
+    Password: {
+      type: String,
+      required: [true, "Please choose a password..."],
+      minlength: 6,
+      select: false,
+    },
+    PasswordConfirm: {
+      type: String,
+      required: [true, "Please confirm your password...."],
+      validate: {
+        validator: function (el) {
+          return el === this.password;
+        },
+        message: "Passwords are not the same..",
+      },
+    }
+})
